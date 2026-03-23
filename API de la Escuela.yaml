@@ -1,0 +1,650 @@
+openapi: 3.0.3
+info:
+  title: API de la Escuela
+  version: 1.0.0
+  description: Documentación de los CRUDs de Alumnos, Cursos y Matrículas
+paths:
+  /api/alumnos/:
+    get:
+      operationId: api_alumnos_list
+      description: Obtiene una lista de todos los alumnos registrados.
+      summary: Listar Alumnos
+      parameters:
+      - in: query
+        name: apellido
+        schema:
+          type: string
+      - in: query
+        name: email
+        schema:
+          type: string
+      - in: query
+        name: nombre
+        schema:
+          type: string
+      tags:
+      - Alumnos
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Alumno'
+          description: ''
+    post:
+      operationId: api_alumnos_create
+      description: Registra un nuevo alumno en el sistema, permitiendo subir una foto
+        de perfil.
+      summary: Crear Alumno
+      tags:
+      - Alumnos
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                nombre:
+                  type: string
+                apellido:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                foto_perfil:
+                  type: string
+                  format: binary
+              required:
+              - nombre
+              - apellido
+              - email
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Alumno'
+          description: ''
+  /api/alumnos/{id}/:
+    get:
+      operationId: api_alumnos_retrieve
+      description: Obtiene los detalles de un alumno específico por su ID.
+      summary: Obtener Alumno
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this alumno.
+        required: true
+      tags:
+      - Alumnos
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Alumno'
+          description: ''
+    put:
+      operationId: api_alumnos_update
+      description: Actualiza todos los datos de un alumno existente.
+      summary: Actualizar Alumno
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this alumno.
+        required: true
+      tags:
+      - Alumnos
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                nombre:
+                  type: string
+                apellido:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                foto_perfil:
+                  type: string
+                  format: binary
+              required:
+              - nombre
+              - apellido
+              - email
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Alumno'
+          description: ''
+    patch:
+      operationId: api_alumnos_partial_update
+      description: Actualiza uno o más campos de un alumno.
+      summary: Actualización Parcial de Alumno
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this alumno.
+        required: true
+      tags:
+      - Alumnos
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                nombre:
+                  type: string
+                apellido:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                foto_perfil:
+                  type: string
+                  format: binary
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Alumno'
+          description: ''
+    delete:
+      operationId: api_alumnos_destroy
+      description: Elimina un alumno del sistema.
+      summary: Eliminar Alumno
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this alumno.
+        required: true
+      tags:
+      - Alumnos
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '204':
+          description: No response body
+  /api/cursos/:
+    get:
+      operationId: api_cursos_list
+      description: Obtiene una lista de todos los cursos.
+      summary: Listar Cursos
+      parameters:
+      - in: query
+        name: nombre
+        schema:
+          type: string
+      tags:
+      - Cursos
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Curso'
+          description: ''
+    post:
+      operationId: api_cursos_create
+      description: Crea un nuevo curso.
+      summary: Crear Curso
+      tags:
+      - Cursos
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Curso'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Curso'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Curso'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Curso'
+          description: ''
+  /api/cursos/{id}/:
+    get:
+      operationId: api_cursos_retrieve
+      description: Obtiene los detalles de un curso por su ID.
+      summary: Obtener Curso
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this curso.
+        required: true
+      tags:
+      - Cursos
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Curso'
+          description: ''
+    put:
+      operationId: api_cursos_update
+      description: Actualiza un curso existente.
+      summary: Actualizar Curso
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this curso.
+        required: true
+      tags:
+      - Cursos
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Curso'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Curso'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Curso'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Curso'
+          description: ''
+    patch:
+      operationId: api_cursos_partial_update
+      description: Actualiza parcialmente un curso existente.
+      summary: Actualización Parcial de Curso
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this curso.
+        required: true
+      tags:
+      - Cursos
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedCurso'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedCurso'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedCurso'
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Curso'
+          description: ''
+    delete:
+      operationId: api_cursos_destroy
+      description: Elimina un curso.
+      summary: Eliminar Curso
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this curso.
+        required: true
+      tags:
+      - Cursos
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '204':
+          description: No response body
+  /api/matriculas/:
+    get:
+      operationId: api_matriculas_list
+      description: Obtiene una lista de todas las matrículas.
+      summary: Listar Matrículas
+      parameters:
+      - in: query
+        name: alumno
+        schema:
+          type: integer
+      - in: query
+        name: curso
+        schema:
+          type: integer
+      - in: query
+        name: fecha_matricula
+        schema:
+          type: string
+          format: date
+      tags:
+      - Matrículas
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Matricula'
+          description: ''
+    post:
+      operationId: api_matriculas_create
+      description: Registra una nueva matrícula de un alumno en un curso.
+      summary: Crear Matrícula
+      tags:
+      - Matrículas
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Matricula'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Matricula'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Matricula'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Matricula'
+          description: ''
+  /api/matriculas/{id}/:
+    get:
+      operationId: api_matriculas_retrieve
+      description: Obtiene los detalles de una matrícula por su ID.
+      summary: Obtener Matrícula
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this matricula.
+        required: true
+      tags:
+      - Matrículas
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Matricula'
+          description: ''
+    put:
+      operationId: api_matriculas_update
+      description: Actualiza una matrícula existente.
+      summary: Actualizar Matrícula
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this matricula.
+        required: true
+      tags:
+      - Matrículas
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Matricula'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Matricula'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Matricula'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Matricula'
+          description: ''
+    patch:
+      operationId: api_matriculas_partial_update
+      description: Actualiza parcialmente una matrícula existente.
+      summary: Actualización Parcial de Matrícula
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this matricula.
+        required: true
+      tags:
+      - Matrículas
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedMatricula'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedMatricula'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedMatricula'
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Matricula'
+          description: ''
+    delete:
+      operationId: api_matriculas_destroy
+      description: Elimina una matrícula.
+      summary: Eliminar Matrícula
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this matricula.
+        required: true
+      tags:
+      - Matrículas
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '204':
+          description: No response body
+components:
+  schemas:
+    Alumno:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        nombre:
+          type: string
+          maxLength: 100
+        apellido:
+          type: string
+          maxLength: 100
+        email:
+          type: string
+          format: email
+          maxLength: 254
+        foto_perfil:
+          type: string
+          format: uri
+          nullable: true
+      required:
+      - apellido
+      - email
+      - id
+      - nombre
+    Curso:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        nombre:
+          type: string
+          maxLength: 150
+        descripcion:
+          type: string
+          nullable: true
+      required:
+      - id
+      - nombre
+    Matricula:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        fecha_matricula:
+          type: string
+          format: date
+          readOnly: true
+        alumno:
+          type: integer
+        curso:
+          type: integer
+      required:
+      - alumno
+      - curso
+      - fecha_matricula
+      - id
+    PatchedCurso:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        nombre:
+          type: string
+          maxLength: 150
+        descripcion:
+          type: string
+          nullable: true
+    PatchedMatricula:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        fecha_matricula:
+          type: string
+          format: date
+          readOnly: true
+        alumno:
+          type: integer
+        curso:
+          type: integer
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid

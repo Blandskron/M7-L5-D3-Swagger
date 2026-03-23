@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: escuela_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin1234
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  web:
+    image: blandskron/apiescuela:latest
+    ports:
+      - "8000:8000" # Mapea el puerto 8000 de tu PC al 8000 del contenedor
+    env_file:
+      - .env  # Importa todas las variables del archivo .env
+    environment:
+      - DB_HOST=db
+      # Configuraciones por defecto para el superusuario:
+      - DJANGO_SUPERUSER_USERNAME=admin
+      - DJANGO_SUPERUSER_EMAIL=admin@escuela.com
+      - DJANGO_SUPERUSER_PASSWORD=admin1234
+    depends_on:
+      - db
+    volumes:
+      - ./media:/app/media  # Guarda las fotos de perfil en tu disco local
+
+volumes:
+  postgres_data:
